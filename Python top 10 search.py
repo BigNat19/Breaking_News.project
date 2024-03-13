@@ -16,6 +16,7 @@ links = []
 for j in search(query, num=10, stop=10):
     links.append(j)
 
+# Enumerate starting from 1st link
 for idx, link in enumerate(links, start=1):
     print(f"{idx}. {link}")
 
@@ -27,16 +28,19 @@ response = requests.get(selected_link)
 soup = BeautifulSoup(response.content, "html.parser")
 headlines = soup.find_all('h3')
 
-if not headlines:
-    print("Error! Please check website!")
+# Adjust the starting index to hide the first 6 headlines
+if len(headlines) > 6:
+    headlines = headlines[6:]
 else:
-    for headline in headlines:
-        start_value = ord('.')  # ASCII value of '.'
-        numbered_text = ""
-        for i, line in enumerate(headline.text.strip().split('\n'), start=start_value):
-            # Convert the integer back to character
-            char_start = chr(i)
-            # Append character start to line
-            numbered_text += f"{char_start}. {line}\n"
+    print("Error! Please check website!")
 
-        print(numbered_text)
+for headline in headlines:
+    start_value = ord('.')  # ASCII value of '.'
+    numbered_text = ""
+    for i, line in enumerate(headline.text.strip().split('\n'), start=start_value):
+        # Convert the integer back to character
+        char_start = chr(i)
+        # Append character start to line
+        numbered_text += f"{char_start}. {line}\n"
+    
+    print(numbered_text)
